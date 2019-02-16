@@ -112,10 +112,9 @@ def train(color, **kwargs):
             xs = range(len(rewardss))
             means = smoothed_rewards.mean()
             stds = smoothed_rewards.std()
-            plt.gca().clear()
             plt.plot(xs, means)
             plt.fill_between(
-                xs, means - stds, means + stds, alpha=0.5, facecolor='b')
+                    xs[-1:], means[-1:] - stds[-1:], means[-1:] + stds[-1:], alpha=0.5, facecolor=color)
             plt.pause(0.001)
 
 
@@ -148,3 +147,5 @@ cm = mpl.cm.get_cmap('viridis', len(params))
 
 for i in range(len(params)):
     train(cm.colors[i], **params[i])
+
+input()
