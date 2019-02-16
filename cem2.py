@@ -104,15 +104,17 @@ else:
 
 # Initialize mean and standard deviation
 theta_mean = np.zeros(dim_theta)
-theta_std = np.ones(dim_theta)
+theta_cov = np.eye(dim_theta)
+eye_cov = np.eye(dim_theta)
 
 # Now, for the algorithm
 for itr in range(n_iter):
     # Sample parameter vectors
     extra_cov = max(1.0 - itr / extra_decay_time, 0) * extra_std**2
+    cov = theta_cov + extra_cov*eye_cov
     thetas = np.random.multivariate_normal(
         mean=theta_mean,
-        cov=np.diag(np.array(theta_std**2) + extra_cov),
+        cov=cov,
         size=batch_size)
     rewards = np.array([noisy_evaluation(theta) for theta in thetas])
 
@@ -122,7 +124,7 @@ for itr in range(n_iter):
 
     # Update theta_mean, theta_std
     theta_mean = elite_thetas.mean(axis=0)
-    theta_std = elite_thetas.std(axis=0)
+    theta_cov = np.cov(elite_thetas.T)
     print("iteration %i. mean f: %8.3g. max f: %8.3g" % (itr, np.mean(rewards),
                                                          np.max(rewards)))
     if itr % 10 == 0:
