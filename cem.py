@@ -17,11 +17,11 @@ class CEM:
             n_actions,
             obs_shape,
             elite_frac=0.2,
-            pop_size=200,
+            pop_size=25,
     ):
         self.n_actions = n_actions
         self.obs_shape = obs_shape
-        self.theta = np.random.rand(*(
+        self.theta = 10*np.random.randn(*(
             (pop_size, ) + obs_shape + (n_actions, )))
         self.means = np.zeros(self.theta.shape[1:])
         self.best_theta = self.means
@@ -56,7 +56,7 @@ class CEM:
         self.best_theta = self.theta[elite_idxs[-1]]
 
         stds = elite_theta.std(axis=0)
-        eps = np.random.rand(*self.theta.shape)
+        eps = np.random.randn(*self.theta.shape)
         noise = eps.reshape([self.pop_size, -1]) * stds.reshape([-1])
 
         self.means = elite_theta.mean(axis=0)
